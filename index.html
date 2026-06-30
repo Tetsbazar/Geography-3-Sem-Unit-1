@@ -172,7 +172,8 @@ body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c
 const MAX_ATTEMPTS = 10;
 const TOTAL_SETS = 8;
 
-const userData = [
+// LocalStorage থেকে ডেটা লোড করা অথবা ডিফল্ট ডেটা ব্যবহার করা
+let userData = JSON.parse(localStorage.getItem('testBazarUsers')) || [
   {username:"alfa_romeo", password:"ARx7P29m", attempts:{}},
   {username:"santos", password:"St8Qv41L", attempts:{}},
   {username:"falcon", password:"Fc3MZ92k", attempts:{}},
@@ -275,6 +276,11 @@ const userData = [
   {username:"zenith", password:"Ze9Qx28Lp", attempts:{}}
 ];
 
+// Helper function to save data
+function saveUserData() {
+    localStorage.setItem('testBazarUsers', JSON.stringify(userData));
+}
+
 // ============================================================
 //  সব সেটের ডেটা (Set 1-8 for Geography Chapter 1: ভূসংস্থান)
 // ============================================================
@@ -359,7 +365,7 @@ const allSets = {
       {q: 'বিভিন্ন যুগে মেরুর সাপেক্ষে মহাদেশগুলির আপেক্ষিক অবস্থান নির্ণয় করে যে বক্র রেখা পাওয়া যায়, তাকে কী বলে?', opts: ['জিগ-স-ফিট রেখা', 'আপাত মেরু পরিভ্রমণ রেখা (Apparent Polar Wandering Curve)', 'চৌম্বক রেখা', 'কুরি রেখা'], ans: 1, exp: 'বিভিন্ন যুগে মেরুর আপেক্ষিক অবস্থান নির্ণয় করে যে বক্র রেখা পাওয়া যায়, তাকে আপাত মেরু পরিভ্রমণ রেখা বলে, যা মহাদেশগুলির স্থান পরিবর্তনের চিত্র তুলে ধরে।'},
       {q: 'ড্যু টয়েট-এর মতে মহাদেশগুলি উপকূলরেখার বদলে কোন্ অংশের সাদৃশ্য দেখলে আরও ভালোভাবে জোড়া লাগে?', opts: ['পাহাড়ের চূড়া', 'মহীসোপান অঞ্চল (Continental shelf)', 'গভীর সমুদ্রখাত', 'নদীর মোহনা'], ans: 1, exp: 'ড্যু টয়েট বিশ্বাস করতেন যে উপকূলরেখার বদলে মহীসোপান অঞ্চলের মধ্যে সাদৃশ্য দেখলে মহাদেশগুলি আরও নিখুঁতভাবে মিলে যায়।'},
       {q: 'গ্লোসোপটেরিস কাঠের জীবাশ্মে কী পাওয়া গেছে, যা প্রমাণ করে যে সেসময় আর্দ্র ও শুষ্ক ঋতু পরিবর্তন ছিল?', opts: ['খনিজ তেল', 'বরফের দাগ', 'ট্রি-রিং (Tree ring)', 'চৌম্বক রেখা'], ans: 2, exp: 'গ্লোসোপটেরিস কাঠের জীবাশ্মে ট্রি-রিং (tree ring) বা বর্ষবলয় পাওয়া গেছে, যার থেকে মনে করা হয় সে সময় আর্দ্র ও শুষ্ক ঋতু পরিবর্তন ছিল।'},
-      {q: 'মহাদেশীয় চলনের ফলে এশিয়া, ইউরোপ ও উত্তর আমেরিকা কোন্ প্রাচীন ভূখণ্ড ভেঙে সৃষ্টি হয়েছে?', opts: ['গন্ডোয়ানাল্যান্ড', 'প্যানথালাসা', 'লরেশিয়া', 'টেথিস'], ans: 2, exp: 'প্যানজিয়ার উত্তরাংশ লরেশিয়া বিভক্ত হয়ে উত্তর আমেরিকা, ইউরোপ ও এশিয়া মহাদেশে পরিণত হয়।'},
+      {q: 'মেসোজোয়িক মহাযুগের অন্তর্গত কোন্ যুগে ভারত ও অস্ট্রেলিয়া আফ্রিকা থেকে বিচ্ছিন্ন হয়ে উত্তর-পূর্ব দিকে সঞ্চলিত হয়?', opts: ['কার্বোনিফেরাস', 'জুরাসিক', 'ট্রিয়াসিক', 'ক্রিটেশিয়াস'], ans: 1, exp: 'জুরাসিক যুগে (১৩.৫ কোটি বছর পূর্বে) ভারত ও অস্ট্রেলিয়া আফ্রিকা থেকে বিচ্ছিন্ন হয়ে উত্তর-পূর্ব দিকে সঞ্চলিত হয়, যার ফলস্বরূপ ভারত মহাসাগরের সৃষ্টি হয়েছিল।'},
       {q: 'ভারত ও অস্ট্রেলিয়া আফ্রিকা থেকে বিচ্ছিন্ন হয়ে উত্তরে অগ্রসর হওয়ায় কোন্ মহাসাগরের সৃষ্টি হয়?', opts: ['নরওয়েজীয় সাগর', 'আটলান্টিক মহাসাগর', 'প্রশান্ত মহাসাগর', 'ভারত মহাসাগর'], ans: 3, exp: 'ভারত ও অস্ট্রেলিয়া গন্ডোয়ানাল্যান্ড তথা আফ্রিকা থেকে বিচ্ছিন্ন হয়ে উত্তর-পূর্ব দিকে সঞ্চলিত হওয়ায় ভারত মহাসাগরের সৃষ্টি হয়েছে।'},
       {q: 'গন্ডোয়ানা যুগের হিমবাহবাহিত পলি বা টিলাইট বর্তমানে কোন্ গোলার্ধের মহাদেশগুলিতে পাওয়া গেছে?', opts: ['উত্তর গোলার্ধ', 'দক্ষিণ গোলার্ধ', 'পূর্ব গোলার্ধ', 'উভয় গোলার্ধ'], ans: 1, exp: 'গন্ডোয়ানা যুগের হিমবাহবাহিত পলি বর্তমানে মূলত দক্ষিণ গোলার্ধের সব মহাদেশে (যেমন- দক্ষিণ আমেরিকা, আফ্রিকা, ভারত, অস্ট্রেলিয়া) পাওয়া গেছে।'},
       {q: '\'প্যানজিয়া\' (Pangea) কোন্ ভাষার শব্দ?', opts: ['ল্যাটিন', 'গ্রিক', 'জার্মান', 'ফারসি'], ans: 1, exp: '\'প্যানজিয়া\' একটি গ্রিক শব্দ, যার অর্থ সমগ্র পৃথিবী (all earth)।'},
@@ -495,10 +501,20 @@ function showHub() {
   document.getElementById('resultWrap').classList.remove('show');
   document.getElementById('timerBox').classList.remove('danger');
   clearInterval(timerInterval);
-  if (currentUser) {
-    document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+  
+  // Check if user is already logged in via LocalStorage
+  const savedUser = localStorage.getItem('testBazarCurrentUser');
+  if (savedUser) {
+      const userObj = JSON.parse(savedUser);
+      // Find the full user object from userData array to keep attempts updated
+      const fullUser = userData.find(u => u.username === userObj.username);
+      if(fullUser) {
+          currentUser = fullUser;
+          isLoggedIn = true;
+          document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+      }
   } else {
-    document.getElementById('hubUserInfo').innerHTML = '';
+      document.getElementById('hubUserInfo').innerHTML = '';
   }
 }
 
@@ -508,8 +524,8 @@ function goToHub() {
   document.getElementById('hubPage').classList.remove('hidden');
   document.getElementById('timerBox').classList.remove('danger');
   clearInterval(timerInterval);
-  isLoggedIn = false;
-  currentUser = null;
+  // Do not logout, just go back to hub
+  showHub(); 
 }
 
 // ============================================================
@@ -519,6 +535,20 @@ function selectSet(id) {
   currentSetId = id;
   const set = allSets[id];
   pendingSetId = id;
+  
+  // If already logged in, check limit immediately
+  if (isLoggedIn && currentUser) {
+      const setAttempts = currentUser.attempts[currentSetId] || 0;
+      if (setAttempts >= MAX_ATTEMPTS) {
+          alert(`⚠️ আপনি এই সেটের সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+          return;
+      }
+      // If limit is ok, start quiz directly without login modal
+      startQuiz(currentSetId);
+      return;
+  }
+
+  // If not logged in, show login modal
   document.getElementById('loginSetName').textContent = `📚 ${set.name} — ${set.topic}`;
   document.getElementById('loginOverlay').classList.add('active');
   document.getElementById('loginUsername').value = '';
@@ -558,6 +588,11 @@ function doLoginFromSet() {
     
     isLoggedIn = true;
     currentUser = user;
+    
+    // Save login state to LocalStorage
+    localStorage.setItem('testBazarCurrentUser', JSON.stringify({username: user.username}));
+    saveUserData(); // Save attempts
+    
     errorEl.style.display = 'none';
     limitInfo.style.display = 'none';
     loginBtn.disabled = false;
@@ -581,7 +616,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Enter') doLoginFromSet();
   });
   buildHub();
-  document.getElementById('hubPage').classList.remove('hidden');
+  showHub(); // Initialize hub with potential saved login
   document.getElementById('testArea').classList.add('hidden');
   document.getElementById('resultWrap').classList.remove('show');
 });
@@ -598,7 +633,9 @@ function startQuiz(setId) {
     return;
   }
   
+  // Increment attempt
   currentUser.attempts[setId] = (currentUser.attempts[setId] || 0) + 1;
+  saveUserData(); // Save updated attempts
   
   cur = 0; score = 0; wrong = 0; answered = false;
   timeLeft = 10 * 60; userAnswers = [];
@@ -738,4 +775,3 @@ function loadReview() {
 
 </body>
 </html>
-
